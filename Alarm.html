@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Timer</title>
+  </head>
+  <body style="background-color: darkorange;text-align: center; padding-top: 300px; "background-image: url("bg.jpg");>
+    <h1 >Timer</h1>
+    <label for="time" >Enter time (hh:mm:ss):</label>
+    <input type="text" id="time" name="time" / >
+    <br /><br />
+    <button onclick="startTimer()">Start</button>
+    <button onclick="stopTimer()">Stop</button>
+    <br /><br />
+    <span id="timerDisplay"></span>
+    <audio id="alarm">
+      <source src="sound1.mp3" type="audio/mpeg" />
+    </audio>
+  </body>
+</html>
+<script>
+  var time = 0;
+  var interval;
+  var timerDisplay = document.getElementById("timerDisplay");
+  var alarm = document.getElementById("alarm");
+
+  function startTimer() {
+    var input = document.getElementById("time").value;
+    var parts = input.split(":");
+    time =
+      (parseInt(parts[0]) * 3600 +
+        parseInt(parts[1]) * 60 +
+        parseInt(parts[2])) *
+      1000;
+
+    if (isNaN(time) || time == 0) {
+      alert("Please enter a valid time");
+      return;
+    }
+
+    interval = setInterval(updateTimer, 1000);
+  }
+
+  function updateTimer() {
+    if (time <= 0) {
+      clearInterval(interval);
+      timerDisplay.innerHTML = "Timer Expired";
+      alarm.play();
+      window.alert("Timer Expired");
+      return;
+    }
+
+    time -= 1000;
+    var hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+    var minutes = Math.floor((time / (1000 * 60)) % 60);
+    var seconds = Math.floor((time / 1000) % 60);
+
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    timerDisplay.innerHTML = hours + ":" + minutes + ":" + seconds;
+  }
+
+  function stopTimer() {
+    clearInterval(interval);
+    time = 0;
+    timerDisplay.innerHTML = "";
+    alarm.pause();
+    alarm.currentTime = 0;
+  }
+</script>
